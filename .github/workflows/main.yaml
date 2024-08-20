@@ -45,8 +45,7 @@ jobs:
         sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/ 
         sudo chown -R $(whoami):$(whoami) ./verilator 
         cp -r ./verilator/* /usr/local/share/verilator/bin/ 
-        chmod +x /usr/local/share/verilator/bin/verilator
-        ls /usr/local/share/verilator/bin/
+        chmod +x /usr/local/share/verilator/bin/*
 
     - name: Run the testbench
       run: | 
@@ -73,8 +72,7 @@ jobs:
         sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/ 
         sudo chown -R $(whoami):$(whoami) ./verilator 
         cp -r ./verilator/* /usr/local/share/verilator/bin/ 
-        chmod +x /usr/local/share/verilator/bin/verilator
-        ls /usr/local/share/verilator/bin/
+        chmod +x /usr/local/share/verilator/bin/*
 
     - name: run the testbench
       run: | 
