@@ -40,7 +40,9 @@ jobs:
         path: ./verilator
 
     - name: Change ownership of verilator
-      run: sudo chown -R ${whoami}:${whoami} ./verilator
+      run: | 
+        sudo chown -R ${whoami}:${whoami} ./verilator
+        sudo chmod +x ./verilator/verilator
 
     - name: Run the testbench
       run: | 
@@ -62,7 +64,9 @@ jobs:
         path: ./verilator
 
     - name: Change ownership of verilator
-      run: sudo chown -R ${whoami}:${whoami} ./verilator
+      run: | 
+        sudo chown -R ${whoami}:${whoami} ./verilator
+        sudo chmod +x ./verilator/verilator
 
     - name: run the testbench
       run: | 
