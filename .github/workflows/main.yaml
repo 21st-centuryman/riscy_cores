@@ -42,11 +42,10 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get install ccache perl python3
 
-    - name: Change ownership of verilator
+    - name: Set up verilator
       run: | 
         sudo mkdir -p /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) ./verilator 
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/ ./verilator
         cp -r ./verilator/* /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
@@ -73,16 +72,15 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get install ccache perl python3
 
-    - name: Change ownership of verilator
+    - name: Set up verilator
       run: | 
         sudo mkdir -p /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) ./verilator 
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/ ./verilator 
         cp -r ./verilator/* /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
-    - name: run the testbench
+    - name: Run the testbench
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
         ./obj_dir/Vconway_tb
