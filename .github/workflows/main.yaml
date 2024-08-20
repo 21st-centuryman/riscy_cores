@@ -58,7 +58,7 @@ jobs:
 
   riscy32_waveform:
     runs-on: ubuntu-latest
-    needs: build_verilator
+    needs: [riscy32_single]
     strategy:
       matrix: 
         component: ["alu", "memory", "register", "control"]
@@ -92,9 +92,6 @@ jobs:
       run: |
         sudo apt-get install gtkwave
         gtkwave -o waveform.png --dark sim.vcd
-
-
-
 
   #  conway:
   #    runs-on: ubuntu-latest
