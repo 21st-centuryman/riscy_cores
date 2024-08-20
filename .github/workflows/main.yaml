@@ -47,7 +47,7 @@ jobs:
         ./obj_dir/Vconway_tb
 
   # Need to make build step work first so we can seperate it all.
-  synthesize build:
+  synthesize_build:
    needs: [conway, riscy32_single]
    runs-on: ubuntu-latest
 
