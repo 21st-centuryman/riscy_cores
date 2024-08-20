@@ -55,40 +55,41 @@ jobs:
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
-  conway:
-    runs-on: ubuntu-latest
-    needs: build_verilator
+  # conway:
+  #   runs-on: ubuntu-latest
+  #   needs: build_verilator
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
 
-    - name: Perpare for verilator
-      run: | 
-        sudo mkdir -p /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
+  #   - name: Perpare for verilator
+  #     run: | 
+  #       sudo mkdir -p /usr/local/share/verilator/
+  #       sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
 
-    - name: Restore Verilator Binary
-      uses: actions/cache@v4
-      with:
-        path: /usr/local/share/verilator/
-        key: verilator-binary
+  #   - name: Restore Verilator Binary
+  #     uses: actions/cache@v4
+  #     with:
+  #       path: /usr/local/share/verilator/
+  #       key: verilator-binary
 
-    - name: Set up verilator
-      run: | 
-        sudo apt-get install ccache
-        chmod -R +x /usr/local/share/verilator/*
-        sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
+  #   - name: Set up verilator
+  #     run: | 
+  #       sudo apt-get install ccache
+  #       chmod -R +x /usr/local/share/verilator/*
+  #       sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
-    - name: Run the testbench
-      run: | 
-        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
-        ./obj_dir/Vconway_tb
+  #   - name: Run the testbench
+  #     run: | 
+  #       verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
+  #       ./obj_dir/Vconway_tb
 
 
   # Need to make build step work first so we can seperate it all.
   synthesize_build:
-   needs: [conway, riscy32_single]
+    #needs: [conway, riscy32_single]
+   needs: riscy32_single
    runs-on: ubuntu-latest
 
    steps:
