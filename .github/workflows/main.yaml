@@ -40,7 +40,7 @@ jobs:
         path: ./verilator
 
     - name: Install dependencies
-      run: sudo apt-get install ccache pearl python3
+      run: sudo apt-get install ccache perl python3
 
     - name: Change ownership of verilator
       run: | 
@@ -71,7 +71,7 @@ jobs:
         path: ./verilator
 
     - name: Install dependencies
-      run: sudo apt-get install ccache pearl python3
+      run: sudo apt-get install ccache perl python3
 
     - name: Change ownership of verilator
       run: | 
