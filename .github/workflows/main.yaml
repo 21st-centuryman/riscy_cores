@@ -6,8 +6,21 @@ on:
       - '**'
 
 jobs:
+  build_verilator:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Verilator Action
+      uses: V0XNIHILI/install-verilator-action@v0.0.2
+
+    - name: Upload Verilator Binary
+      uses: actions/upload-artifact
+      with:
+        name: verilator-binary
+        path: /usr/local/bin/verilator
+
   riscy32_single:
     runs-on: ubuntu-latest
+    needs: build_verilator
     strategy:
       matrix: 
         component: ["alu", "memory", "register", "control"]
@@ -16,33 +29,32 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Verilator Action
-      uses: V0XNIHILI/install-verilator-action@v0.0.2
+    - name: Download Verilator Binary
+      uses: actions/download-artifact
+      with:
+        name: verilator-binary
+        path: /usr/local/bin/verilator
 
     - name: Run the testbench
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
-      #    - name: Run CPU testbench
-      #      if: success()
-      #      run: | 
-      #        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/cpu_tb.sv cores/riscy32_single/src/cpu.sv;
-      #        ./obj_dir/Vcpu_tb
-
-
   conway:
     runs-on: ubuntu-latest
+    needs: build_verilator
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Verilator Action
-      uses: V0XNIHILI/install-verilator-action@v0.0.2
+    - name: Download Verilator Binary
+      uses: actions/download-artifact
+      with:
+        name: verilator-binary
+        path: /usr/local/bin/verilator
 
     - name: run the testbench
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
         ./obj_dir/Vconway_tb
-
