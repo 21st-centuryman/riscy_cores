@@ -20,7 +20,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: verilator-binary
-        path: /usr/local/share/verilator/bin/
+        path: /usr/local/share/verilator/
 
   riscy32_single:
     runs-on: ubuntu-latest
@@ -41,11 +41,11 @@ jobs:
 
     - name: Change ownership of verilator
       run: | 
-        sudo mkdir -p /usr/local/share/verilator/bin/ 
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/ 
+        sudo mkdir -p /usr/local/share/verilator/
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
         sudo chown -R $(whoami):$(whoami) ./verilator 
-        cp -r ./verilator/* /usr/local/share/verilator/bin/ 
-        chmod -R +x /usr/local/share/verilator/bin/*
+        cp -r ./verilator/* /usr/local/share/verilator/
+        chmod -R +x /usr/local/share/verilator/*
 
     - name: Run the testbench
       run: | 
@@ -68,11 +68,11 @@ jobs:
 
     - name: Change ownership of verilator
       run: | 
-        sudo mkdir -p /usr/local/share/verilator/bin/ 
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/ 
+        sudo mkdir -p /usr/local/share/verilator/
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
         sudo chown -R $(whoami):$(whoami) ./verilator 
-        cp -r ./verilator/* /usr/local/share/verilator/bin/ 
-        chmod -R +x /usr/local/share/verilator/bin/*
+        cp -r ./verilator/* /usr/local/share/verilator/
+        chmod -R +x /usr/local/share/verilator/*
 
     - name: run the testbench
       run: | 
