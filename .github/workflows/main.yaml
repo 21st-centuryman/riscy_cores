@@ -39,9 +39,12 @@ jobs:
         name: verilator-binary
         path: ./verilator
 
+    - name: Change ownership of verilator
+      run: sudo chown -R ${whoami}:${whoami} ./verilator
+
     - name: Run the testbench
       run: | 
-        sudo ./verilator/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
+        ./verilator/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
   conway:
@@ -58,7 +61,10 @@ jobs:
         name: verilator-binary
         path: ./verilator
 
+    - name: Change ownership of verilator
+      run: sudo chown -R ${whoami}:${whoami} ./verilator
+
     - name: run the testbench
       run: | 
-        sudo ./verilator/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
+        ./verilator/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
         ./obj_dir/Vconway_tb
