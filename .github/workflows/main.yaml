@@ -20,7 +20,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: verilator-binary
-        path: /usr/local/bin/verilator
+        path: /usr/local/share/verilator/bin/
 
   riscy32_single:
     runs-on: ubuntu-latest
@@ -37,11 +37,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: verilator-binary
-        path: /usr/local/bin/verilator
+        path: /usr/local/share/verilator/bin/
 
     - name: Run the testbench
       run: | 
-        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
+        /usr/local/share/verilator/bin/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
   conway:
@@ -56,9 +56,9 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: verilator-binary
-        path: /usr/local/bin/verilator
+        path: /usr/local/share/verilator/bin/
 
     - name: run the testbench
       run: | 
-        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
+        /usr/local/share/verilator/bin/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
         ./obj_dir/Vconway_tb
