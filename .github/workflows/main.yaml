@@ -9,11 +9,15 @@ jobs:
   build_verilator:
     runs-on: ubuntu-latest
     steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Install Verilator Action
-      uses: V0XNIHILI/install-verilator-action@v0.0.2
+      uses: V0XNIHILI/install-verilator-action@main
 
     - name: Upload Verilator Binary
-      uses: actions/upload-artifact
+      uses: actions/upload-artifact@v4
       with:
         name: verilator-binary
         path: /usr/local/bin/verilator
@@ -30,7 +34,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download Verilator Binary
-      uses: actions/download-artifact
+      uses: actions/download-artifact@v4
       with:
         name: verilator-binary
         path: /usr/local/bin/verilator
@@ -49,7 +53,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download Verilator Binary
-      uses: actions/download-artifact
+      uses: actions/download-artifact@v4
       with:
         name: verilator-binary
         path: /usr/local/bin/verilator
