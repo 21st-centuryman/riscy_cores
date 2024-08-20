@@ -39,6 +39,9 @@ jobs:
         name: verilator-binary
         path: ./verilator
 
+    - name: Install dependencies
+      run: sudo apt-get install ccache pearl python3
+
     - name: Change ownership of verilator
       run: | 
         sudo mkdir -p /usr/local/share/verilator/
@@ -66,6 +69,9 @@ jobs:
       with:
         name: verilator-binary
         path: ./verilator
+
+    - name: Install dependencies
+      run: sudo apt-get install ccache pearl python3
 
     - name: Change ownership of verilator
       run: | 
