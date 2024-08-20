@@ -1,0 +1,4 @@
+**/obj_dir/
+.DS_Store
+frames.txt
+*.vcd
