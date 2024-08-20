@@ -1,4 +1,4 @@
-name: Simulate riscy chips
+name: Riscy chips
 
 on:
   push:
