@@ -33,6 +33,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Perpare for verilator
+      run: | 
+        sudo mkdir -p /usr/local/share/verilator/
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
+
     - name: Restore Verilator Binary
       uses: actions/cache@v4
       with:
@@ -42,7 +47,6 @@ jobs:
     - name: Set up verilator
       run: | 
         sudo apt-get install ccache
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
@@ -59,6 +63,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Perpare for verilator
+      run: | 
+        sudo mkdir -p /usr/local/share/verilator/
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
+
     - name: Restore Verilator Binary
       uses: actions/cache@v4
       with:
@@ -68,7 +77,6 @@ jobs:
     - name: Set up verilator
       run: | 
         sudo apt-get install ccache
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
