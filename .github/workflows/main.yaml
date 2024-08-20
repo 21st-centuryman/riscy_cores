@@ -93,13 +93,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gtkwave xvfb x11vnc tigervnc-viewer imagemagick
 
-    - name: Setup virtual display
+    - name: Setup virtual display & generate png
       run: |
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 &
-
-    - name: Generate waveform and capture screenshot
-      run: |
         gtkwave -o waveform.png --dark sim.vcd &
         sleep 5 # Wait for gtkwave to open
         xwd -root -out screenshot.xwd
