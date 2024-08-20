@@ -41,11 +41,11 @@ jobs:
 
     - name: Change ownership of verilator
       run: | 
-        sudo mkdir /usr/local/share/verilator/bin/;
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/;
-        sudo chown -R $(whoami):$(whoami) ./verilator;
-        #cp -r ./verilator/* /usr/local/share/verilator/bin/;
-        #chmod +x /usr/local/share/verilator/bin/verilator;
+        sudo mkdir /usr/local/share/verilator/bin/ &&
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/ &&
+        sudo chown -R $(whoami):$(whoami) ./verilator &&
+        cp -r ./verilator/* /usr/local/share/verilator/bin/ &&
+        chmod +x /usr/local/share/verilator/bin/verilator
 
     - name: Run the testbench
       run: | 
@@ -68,11 +68,11 @@ jobs:
 
     - name: Change ownership of verilator
       run: | 
-        sudo mkdir /usr/local/share/verilator/bin/;
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/;
-        sudo chown -R $(whoami):$(whoami) ./verilator;
-        #cp -r ./verilator/* /usr/local/share/verilator/bin/;
-        #chmod +x /usr/local/share/verilator/bin/verilator;
+        sudo mkdir /usr/local/share/verilator/bin/ &&
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/bin/ &&
+        sudo chown -R $(whoami):$(whoami) ./verilator &&
+        cp -r ./verilator/* /usr/local/share/verilator/bin/ &&
+        chmod +x /usr/local/share/verilator/bin/verilator
 
     - name: run the testbench
       run: | 
