@@ -39,11 +39,9 @@ jobs:
         name: verilator-binary
         path: ./verilator
 
-    - name: Install dependencies
-      run: sudo apt-get install ccache 
-
     - name: Set up verilator
       run: | 
+        sudo apt-get install ccache
         sudo mkdir -p /usr/local/share/verilator/
         sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/ ./verilator
         cp -r ./verilator/* /usr/local/share/verilator/
@@ -69,11 +67,9 @@ jobs:
         name: verilator-binary
         path: ./verilator
 
-    - name: Install dependencies
-      run: sudo apt-get install ccache perl python3
-
     - name: Set up verilator
       run: | 
+        sudo apt-get install ccache
         sudo mkdir -p /usr/local/share/verilator/
         sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/ ./verilator 
         cp -r ./verilator/* /usr/local/share/verilator/
