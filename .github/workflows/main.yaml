@@ -97,7 +97,7 @@ jobs:
       run: |
         export DISPLAY=:99
         Xvfb :99 -screen 0 1024x768x24 &
-        gtkwave -o waveform.png --dark sim.vcd &
+        gtkwave -o waveform.png sim.vcd &
         sleep 5 # Wait for gtkwave to open
         xwd -root -out screenshot.xwd
         convert screenshot.xwd screenshot.png
