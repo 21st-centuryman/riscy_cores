@@ -55,9 +55,13 @@ jobs:
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
-  conway:
+
+  riscy32_waveform:
     runs-on: ubuntu-latest
     needs: build_verilator
+    strategy:
+      matrix: 
+        component: ["alu", "memory", "register", "control"]
 
     steps:
     - name: Checkout code
@@ -80,7 +84,44 @@ jobs:
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
-    - name: Run the testbench
+    - name: Compile SystemVerilog
       run: | 
-        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
-        ./obj_dir/Vconway_tb
+        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
+
+    - name: Generate waveform
+      run: |
+        sudo apt-get install gtkwave
+        gtkwave -o waveform.png --dark sim.vcd
+
+
+
+
+  #  conway:
+  #    runs-on: ubuntu-latest
+  #    needs: build_verilator
+  #
+  #    steps:
+  #    - name: Checkout code
+  #      uses: actions/checkout@v4
+  #
+  #    - name: Perpare for verilator
+  #      run: | 
+  #        sudo mkdir -p /usr/local/share/verilator/
+  #        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
+  #
+  #    - name: Restore Verilator Binary
+  #      uses: actions/cache@v4
+  #      with:
+  #        path: /usr/local/share/verilator/
+  #        key: verilator-binary
+  #
+  #    - name: Set up verilator
+  #      run: | 
+  #        sudo apt-get install ccache
+  #        chmod -R +x /usr/local/share/verilator/*
+  #        sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
+  #
+  #    - name: Run the testbench
+  #      run: | 
+  #        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
+  #        ./obj_dir/Vconway_tb

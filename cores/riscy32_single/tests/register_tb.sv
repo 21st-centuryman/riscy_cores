@@ -20,6 +20,9 @@ module register_tb;
 
 
   initial begin
+    $dumpfile("sim.vcd");
+    $dumpvars(0, clk, we3, a1, a2, a3, wd3, rd1, rd2, done);
+
     done = 0;
     clk  = 0;
     we3  = 0;

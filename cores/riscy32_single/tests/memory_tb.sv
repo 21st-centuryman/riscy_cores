@@ -21,8 +21,8 @@ module memory_tb;
   always #1 clk <= ~clk;
 
   initial begin
-    //$dumpfile(memory.vcd");
-    //$dumpvars(0, clk, write_enable, address, data_in, data_out);
+    $dumpfile("sim.vcd");
+    $dumpvars(0, clk, write_enable, address, data_in, data_out);
 
     for (int i = 0; i < 4096; i++) begin
       address = i;
