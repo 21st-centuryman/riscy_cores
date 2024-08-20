@@ -88,10 +88,29 @@ jobs:
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
 
-    - name: Generate waveform
+    - name: Install necessary packages
       run: |
-        sudo apt-get install gtkwave
-        gtkwave -o waveform.png --dark sim.vcd
+        sudo apt-get update
+        sudo apt-get install -y gtkwave xvfb x11vnc tigervnc-viewer imagemagick
+
+    - name: Setup virtual display
+      run: |
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1024x768x24 &
+
+    - name: Generate waveform and capture screenshot
+      run: |
+        gtkwave -o waveform.png --dark sim.vcd &
+        sleep 5 # Wait for gtkwave to open
+        xwd -root -out screenshot.xwd
+        convert screenshot.xwd screenshot.png
+        pkill gtkwave # Close gtkwave
+
+    - name: Upload screenshot as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.component }}
+        path: images/${{ matrix.component }}.png
 
   #  conway:
   #    runs-on: ubuntu-latest
