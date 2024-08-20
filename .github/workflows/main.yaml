@@ -46,10 +46,11 @@ jobs:
         sudo chown -R $(whoami):$(whoami) ./verilator 
         cp -r ./verilator/* /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
+        sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
     - name: Run the testbench
       run: | 
-        /usr/local/share/verilator/bin/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
+        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
   conway:
@@ -73,8 +74,9 @@ jobs:
         sudo chown -R $(whoami):$(whoami) ./verilator 
         cp -r ./verilator/* /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
+        sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
     - name: run the testbench
       run: | 
-        /usr/local/share/verilator/bin/verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
+        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
         ./obj_dir/Vconway_tb
