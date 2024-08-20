@@ -16,11 +16,11 @@ jobs:
     - name: Install Verilator Action
       uses: V0XNIHILI/install-verilator-action@main
 
-    - name: Upload Verilator Binary
-      uses: actions/upload-artifact@v4
+    - name: Cache Verilator Binary
+      uses: actions/cache@v4
       with:
-        name: verilator-binary
         path: /usr/local/share/verilator/
+        key: verilator-binary
 
   riscy32_single:
     runs-on: ubuntu-latest
@@ -33,18 +33,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download Verilator Binary
-      uses: actions/download-artifact@v4
+    - name: Restore Verilator Binary
+      uses: actions/cache@v4
       with:
-        name: verilator-binary
-        path: ./verilator
+        path: /usr/local/share/verilator/
+        key: verilator-binary
 
     - name: Set up verilator
       run: | 
         sudo apt-get install ccache
-        sudo mkdir -p /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/ ./verilator
-        cp -r ./verilator/* /usr/local/share/verilator/
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
@@ -61,18 +59,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download Verilator Binary
-      uses: actions/download-artifact@v4
+    - name: Restore Verilator Binary
+      uses: actions/cache@v4
       with:
-        name: verilator-binary
-        path: ./verilator
+        path: /usr/local/share/verilator/
+        key: verilator-binary
 
     - name: Set up verilator
       run: | 
         sudo apt-get install ccache
-        sudo mkdir -p /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/ ./verilator 
-        cp -r ./verilator/* /usr/local/share/verilator/
+        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
