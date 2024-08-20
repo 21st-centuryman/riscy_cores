@@ -40,7 +40,7 @@ jobs:
         path: ./verilator
 
     - name: Install dependencies
-      run: sudo apt-get install ccache perl python3
+      run: sudo apt-get install ccache 
 
     - name: Set up verilator
       run: | 
