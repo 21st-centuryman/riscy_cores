@@ -62,10 +62,18 @@ jobs:
         ./obj_dir/V${{ matrix.component }}_tb
         sootty "sim.vcd" --l 100 -o > waveforms/${{ matrix.component }}.svg
 
-    - name: Upload waveform as artifact
+  upload_waveforms:
+    runs-on: ubuntu-latest
+    needs: riscy32_single
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Upload all waveforms as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: waveforms
+        name: all-waveforms
         path: ./waveforms
 
   #  conway:
