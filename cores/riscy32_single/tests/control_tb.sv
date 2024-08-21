@@ -28,6 +28,7 @@ module control_tb;
     $dumpvars(op, funct3, funct7, flags, RegWrite, ALUSrc, MemWrite, PCSrc, ImmSrc, ResultSrc,
               ALUControl);
 
+    #1;
     // Test R-Type
     op = 7'b0110011;
     funct3 = 3'h0;
@@ -50,6 +51,7 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc R-type");
 
+    #1;
     // Test I-type Arithmetic
     op = 7'b0010011;
     funct3 = 3'h0;
@@ -72,6 +74,7 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc I-type Arithmetic");
 
+    #1;
     // Test I-type Load
     op = 7'b0000011;
     funct3 = 3'h0;
@@ -94,6 +97,7 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc I-Type");
 
+    #1;
     // Test S-Type
     op = 7'b0100011;
     funct3 = 3'h0;
@@ -116,6 +120,7 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc S-Type");
 
+    #1;
     // Test B-Type
     op = 7'b1100011;
     funct3 = 3'h0;
@@ -138,6 +143,7 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc B-Type");
 
+    #1;
     // Test jal
     op = 7'b1101111;
     funct3 = 3'h0;
@@ -158,6 +164,7 @@ module control_tb;
     assert (PCSrc == 1)
     else $error("PCSrc jal");
 
+    #1;
     // Test U-Type: lui
     op = 7'b0110111;
     funct3 = 3'h0;
@@ -180,24 +187,28 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc B-Type");
 
+    #1;
     // Test Branch Flags
     op = 7'b1100011;
     funct3 = 3'h0;
     funct7 = 1;
     flags = 4'b0000;
 
+    #1;
     // Test Beq
-    funct3 = 3'h0;
+    funct3   = 3'h0;
     flags[2] = 1'b1;
     assert (PCSrc == 1)
     else $error("PCSrc Beq");
 
+    #1;
     // Test Bne
     funct3   = 3'h1;
     flags[2] = 1'b1;
     assert (PCSrc == 0)
     else $error("PCSrc Bne");
 
+    #1;
     // Test Blt
     funct3   = 3'h4;
     flags[3] = 1'b1;
@@ -205,6 +216,7 @@ module control_tb;
     assert (PCSrc == 1)
     else $error("PCSrc Blt");
 
+    #1;
     // Test Bge
     funct3   = 3'h5;
     flags[3] = 1'b1;
@@ -212,18 +224,21 @@ module control_tb;
     assert (PCSrc == 0)
     else $error("PCSrc Bge");
 
+    #1;
     // Test Bltu
     funct3   = 3'h6;
     flags[1] = 1'b0;
     assert (PCSrc == 1)
     else $error("PCSrc Bltu");
 
+    #1;
     // Test Bgeu
     funct3   = 3'h7;
     flags[1] = 1'b0;
     assert (PCSrc == 0)
     else $error("PCSrc Bgeu");
 
+    #1;
     // Test default
     funct3 = 3'h2;
     assert (PCSrc == 0)
