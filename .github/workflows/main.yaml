@@ -62,31 +62,10 @@ jobs:
         ./obj_dir/V${{ matrix.component }}_tb
         sootty "sim.vcd" --l 100 -o > waveforms/${{ matrix.component }}.svg
 
-    - name: Cache waveforms
-      uses: actions/cache@v4
-      with:
-        path: ./waveforms
-        key: waveforms
-
-
-  upload_waveforms:
-    runs-on: ubuntu-latest
-    needs: riscy32_single
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Restore Waveforms
-      uses: actions/cache@v4
-      with:
-        path: ./waveforms
-        key: waveforms
-
-    - name: Upload all waveforms as artifact
+    - name: Upload waveform as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: all-waveforms
+        name: ${{ matrix.component}} waveform
         path: ./waveforms
 
   #  conway:
