@@ -66,8 +66,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: waveforms
-        path: waveforms/${{ matrix.component }}.svg
-
+        path: ./waveforms
 
   #  conway:
   #    runs-on: ubuntu-latest
