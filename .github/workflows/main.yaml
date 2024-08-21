@@ -54,18 +54,19 @@ jobs:
       run: |
         sudo apt-get install -y python3
         python3 -m pip install sootty
+        mkdir waveforms
 
     - name: Run the testbench
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
-        sootty "sim.vcd" --l 100 -o > ${{ matrix.component }}.svg
+        sootty "sim.vcd" --l 100 -o > waveforms/${{ matrix.component }}.svg
 
     - name: Upload waveform as artifact
       uses: actions/upload-artifact@v4
       with:
         name: waveforms
-        path: ${{ matrix.component }}.svg
+        path: waveforms/${{ matrix.component }}.svg
 
 
   #  conway:
