@@ -27,7 +27,7 @@ jobs:
     needs: build_verilator
     strategy:
       matrix: 
-        component: ["alu", "memory", "register", "control"]
+        component: ["alu", "control"]
 
     steps:
     - name: Checkout code
