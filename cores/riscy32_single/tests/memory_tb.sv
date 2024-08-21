@@ -75,6 +75,7 @@ module memory_tb;
     assert (data_out == 0)
     else $error("Read from unwritten location failed");
 
+    $dumpoff;
     $finish;
   end
 endmodule

@@ -59,12 +59,12 @@ jobs:
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
-        sootty "sim.vcd" --length 100 -o > ${{ matrix.component }}.svg
+        sootty "sim.vcd" --l 100 -o > ${{ matrix.component }}.svg
 
-    - name: Upload screenshot as artifact
+    - name: Upload waveform as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.component }}
+        name: waveforms
         path: ${{ matrix.component }}.svg
 
 

@@ -18,10 +18,11 @@ module register_tb;
       .done(done)
   );
 
+  always #1 clk <= ~clk;
 
   initial begin
     $dumpfile("sim.vcd");
-    $dumpvars(0, clk, we3, a1, a2, a3, wd3, rd1, rd2, done);
+    $dumpvars(clk, we3, a1, a2, a3, wd3, rd1, rd2, done);
 
     done = 0;
     clk  = 0;
@@ -72,13 +73,13 @@ module register_tb;
 
     // Test done signal
     $display("\n\n\nDisplaying all registers");
-    #10 done = 1;
+    done = 1;
     #10;
     assert (done == 1)
     else $error("Done signal failed");
+
+    $dumpoff;
     $finish;
   end
-
-  always #5 clk <= ~clk;
 endmodule
 
