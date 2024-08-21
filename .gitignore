@@ -2,3 +2,4 @@
 .DS_Store
 frames.txt
 *.vcd
+*.svg
