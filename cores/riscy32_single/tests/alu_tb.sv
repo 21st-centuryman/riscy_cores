@@ -91,42 +91,42 @@ module alu_tb ();
     // -----------------------------
     // FLAGS (ONLY ZERO FOR NOW)
     // -----------------------------
-    #1;
+    #10;
     ALUControl = 4'b0000;  // ADD
     a = 2 ^ 31;
     b = 1;
     assert (flags[0])
     else $error("Overflow flag is broken");
 
-    #3;
+    #10;
     ALUControl = 4'b0000;  // ADD
     a = 2 ^ 31;
     b = 1;
     assert (flags[1])
     else $error("Carry flag is broken");
 
-    #1;
+    #10;
     ALUControl = 4'b1000;  // SUB
     a = 20;
     b = 20;
     assert (flags[2])
     else $error("Zero flag is broken");
 
-    #1;
+    #10;
     ALUControl = 4'b1000;  // SUB
     a = 20;
     b = 30;
     assert (!flags[2])
     else $error("Zero flag is broken");
 
-    #1;
+    #10;
     ALUControl = 4'b1000;  // SUB
     a = -2;
     b = 30;
     assert (flags[3])
     else $error("Sign flag is broken");
 
-    #1;
+    #10;
     ALUControl = 4'b0000;  // SUB
     a = 20;
     b = -30;
