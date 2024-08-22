@@ -50,7 +50,6 @@ jobs:
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
-
     - name: Run the testbench
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
@@ -92,10 +91,10 @@ jobs:
           for item in $ITEMS; do
             verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
             ./obj_dir/V${item}_tb
-            sootty "sim.vcd" --l 100 -o > waveforms/${item}.svg
+            sootty "sim.vcd" -o > waveforms/${item}.svg
           done
 
-      - name: Upload waveform as artifact
+      - name: Upload waveforms as artifact
         uses: actions/upload-artifact@v4
         with:
           name: waveforms
