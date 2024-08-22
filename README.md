@@ -3,7 +3,7 @@
 ## Riscy Cores
 #### Very much a riscy cores, written in SystemVerilog
 
-[![Verilog](https://img.shields.io/badge/SystemVerilog-00599C.svg?style=for-the-badge&logoColor=white&logo=systemverilog)]()
+[![Verilog](https://img.shields.io/badge/SystemVerilog-00599C.svg?style=for-the-badge&logoColor=white&logo=ieee)]()
 [![RISC](https://img.shields.io/badge/risc--v-283272.svg?style=for-the-badge&logoColor=white&logo=riscv)]()
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/21st-centuryman/riscy_cores/main.yaml?branch=main&style=for-the-badge&logo=github&logoColor=white&label=TestBenches&labelColor=black)

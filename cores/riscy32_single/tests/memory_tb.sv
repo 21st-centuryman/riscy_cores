@@ -21,8 +21,8 @@ module memory_tb;
   always #1 clk <= ~clk;
 
   initial begin
-    //$dumpfile(memory.vcd");
-    //$dumpvars(0, clk, write_enable, address, data_in, data_out);
+    $dumpfile("sim.vcd");
+    $dumpvars(0, clk, write_enable, address, data_in, data_out);
 
     for (int i = 0; i < 4096; i++) begin
       address = i;
@@ -31,6 +31,7 @@ module memory_tb;
       repeat (1) @(posedge clk);
     end
 
+    #1;
     // Test read
     address = 32'h00000001;
     write_enable = 0;
@@ -38,6 +39,7 @@ module memory_tb;
     assert (data_out == 0)
     else $error("Read failed");
 
+    #1;
     // Test write
     address = 32'h8542391A;
     write_enable = 1;
@@ -49,6 +51,7 @@ module memory_tb;
     assert (data_out == 32'hdeadbeef)
     else $error("Write failed");
 
+    #1;
     // Test multiple writes
     for (int i = 2; i < 10; i++) begin
       address = 32'h00000010 | i;
@@ -64,6 +67,7 @@ module memory_tb;
       else $error("Multiple writes failed");
     end
 
+    #1;
     // Test read from unwritten location
     address = 32'h00001000;
     write_enable = 0;
@@ -71,6 +75,7 @@ module memory_tb;
     assert (data_out == 0)
     else $error("Read from unwritten location failed");
 
+    $dumpoff;
     $finish;
   end
 endmodule

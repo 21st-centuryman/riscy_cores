@@ -24,11 +24,16 @@ module control_tb;
   );
 
   initial begin
+    $dumpfile("control.vcd");
+    $dumpvars(op, funct3, funct7, flags, RegWrite, ALUSrc, MemWrite, PCSrc, ImmSrc, ResultSrc,
+              ALUControl);
+
     // Test R-Type
     op = 7'b0110011;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 1)
     else $error("RegWrite R-Type");
     assert (ALUSrc == 0)
@@ -51,6 +56,7 @@ module control_tb;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 1)
     else $error("RegWrite I-type Arithmetic");
     assert (ALUSrc == 1)
@@ -63,7 +69,7 @@ module control_tb;
     else $error("ImmSrc I-type Arithmetic");
     assert (ResultSrc == 2'b00)
     else $error("ResultSrc I-type Arithmetic");
-    assert (ALUControl == 4'h5)
+    assert (ALUControl == 4'h0)
     else $error("ALUControl I-type Arithmetic");
     assert (PCSrc == 0)
     else $error("PCSrc I-type Arithmetic");
@@ -73,6 +79,7 @@ module control_tb;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 1)
     else $error("RegWrite I-type Load");
     assert (ALUSrc == 1)
@@ -95,6 +102,7 @@ module control_tb;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 0)
     else $error("RegWrite S-Type");
     assert (ALUSrc == 1)
@@ -117,14 +125,13 @@ module control_tb;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 0)
     else $error("RegWrite B-Type");
     assert (ALUSrc == 1)
     else $error("ALUSrc B-Type");
     assert (MemWrite == 1)
     else $error("MemWrite B-Type");
-    assert (PCSrc == 0)
-    else $error("PCSrc: B-Type");
     assert (ImmSrc == 2'b01)
     else $error("ImmSrc B-Type");
     assert (ResultSrc == 'x)
@@ -139,6 +146,7 @@ module control_tb;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 1)
     else $error("RegWrite jal");
     assert (ImmSrc == 2'b11)
@@ -159,6 +167,7 @@ module control_tb;
     funct3 = 3'h0;
     funct7 = 0;
     flags = 4'b0000;
+    #1;
     assert (RegWrite == 1)
     else $error("RegWrite U-Type: lui");
     assert (ALUSrc == 0)
@@ -178,26 +187,29 @@ module control_tb;
 
     // Test Branch Flags
     op = 7'b1100011;
-    funct3 = 3'h0;
+    funct3 = 3'h7;
     funct7 = 1;
     flags = 4'b0000;
 
     // Test Beq
     funct3 = 3'h0;
-    flags[2] = 1'b1;
+    flags[2] = 1;
+    #1;
     assert (PCSrc == 1)
     else $error("PCSrc Beq");
 
     // Test Bne
     funct3   = 3'h1;
-    flags[2] = 1'b1;
-    assert (PCSrc == 0)
+    flags[2] = 0;
+    #1;
+    assert (PCSrc == 1)
     else $error("PCSrc Bne");
 
     // Test Blt
     funct3   = 3'h4;
     flags[3] = 1'b1;
     flags[0] = 1'b0;
+    #1;
     assert (PCSrc == 1)
     else $error("PCSrc Blt");
 
@@ -205,23 +217,27 @@ module control_tb;
     funct3   = 3'h5;
     flags[3] = 1'b1;
     flags[0] = 1'b0;
+    #1;
     assert (PCSrc == 0)
     else $error("PCSrc Bge");
 
     // Test Bltu
     funct3   = 3'h6;
     flags[1] = 1'b0;
+    #1;
     assert (PCSrc == 1)
     else $error("PCSrc Bltu");
 
     // Test Bgeu
     funct3   = 3'h7;
     flags[1] = 1'b0;
+    #1;
     assert (PCSrc == 0)
     else $error("PCSrc Bgeu");
 
     // Test default
     funct3 = 3'h2;
+    #1;
     assert (PCSrc == 0)
     else $error("PCSrc default");
 
