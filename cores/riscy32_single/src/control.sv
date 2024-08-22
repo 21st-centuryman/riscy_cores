@@ -77,7 +77,7 @@ module control (
         ALUSrc = 1;
         MemWrite = 1;
         ResultSrc = 'x;
-        Branch = 0;
+        Branch = 1;
         ALUControl = 4'h8;
         Jump = 0;
       end

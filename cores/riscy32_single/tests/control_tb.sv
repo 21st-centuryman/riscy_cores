@@ -132,8 +132,6 @@ module control_tb;
     else $error("ALUSrc B-Type");
     assert (MemWrite == 1)
     else $error("MemWrite B-Type");
-    assert (PCSrc == 0)
-    else $error("PCSrc: B-Type");
     assert (ImmSrc == 2'b01)
     else $error("ImmSrc B-Type");
     assert (ResultSrc == 'x)
@@ -195,16 +193,16 @@ module control_tb;
 
     // Test Beq
     funct3 = 3'h0;
-    flags[2] = 1'b1;
+    flags[2] = 1;
     #1;
     assert (PCSrc == 1)
     else $error("PCSrc Beq");
 
     // Test Bne
     funct3   = 3'h1;
-    flags[2] = 1'b1;
+    flags[2] = 0;
     #1;
-    assert (PCSrc == 0)
+    assert (PCSrc == 1)
     else $error("PCSrc Bne");
 
     // Test Blt
