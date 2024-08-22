@@ -91,8 +91,8 @@ jobs:
           for item in $ITEMS; do
             verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
             ./obj_dir/V${item}_tb
-            sootty "${a}.vcd" -o > waveforms/svg/${item}.svg
-            mv "${a}.vcd" waveforms/vcd/
+            sootty "${item}.vcd" -o > waveforms/svg/${item}.svg
+            mv ${item}.vcd ./waveforms/vcd/
           done
 
       - name: Upload waveforms as artifact
