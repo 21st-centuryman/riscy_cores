@@ -77,9 +77,6 @@ module register_tb;
     #10;
     assert (done == 1)
     else $error("Done signal failed");
-
-    $dumpoff;
     $finish;
   end
 endmodule
-

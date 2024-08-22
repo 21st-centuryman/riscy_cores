@@ -79,7 +79,7 @@ jobs:
           chmod -R +x /usr/local/share/verilator/*
           sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
-      - name: Setup sooty
+      - name: Setup sootty
         run: |
           sudo apt-get install -y python3
           python3 -m pip install sootty
@@ -87,7 +87,7 @@ jobs:
 
       - name: Generate waveforms
         run: |
-          ITEMS="alu control"
+          ITEMS="alu control" # Add register and memory when you know why they won't work with sootty
           for item in $ITEMS; do
             verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
             ./obj_dir/V${item}_tb

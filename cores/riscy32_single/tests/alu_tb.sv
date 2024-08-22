@@ -1,9 +1,12 @@
+/*
+ALU Test bench
+*/
 module alu_tb ();
   logic [31:0] a, b, out;
   logic [3:0] ALUControl;
   logic [3:0] flags;
 
-  alu alu (
+  alu dut (
       .rs1(a),
       .rs2(b),
       .rd(out),
@@ -13,7 +16,7 @@ module alu_tb ();
 
   initial begin
     $dumpfile("sim.vcd");
-    $dumpvars(0, a, b, out, flags, ALUControl);
+    $dumpvars(alu_tb);
 
     ALUControl = 4'b0000;  // ADD
     a = 20;
@@ -132,4 +135,3 @@ module alu_tb ();
     $finish;
   end
 endmodule
-

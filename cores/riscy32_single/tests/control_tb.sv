@@ -9,7 +9,7 @@ module control_tb;
   logic [1:0] ImmSrc, ResultSrc;
   logic [3:0] ALUControl;
 
-  control control (
+  control dut (
       .op(op),
       .funct3(funct3),
       .funct7(funct7),
@@ -25,8 +25,7 @@ module control_tb;
 
   initial begin
     $dumpfile("sim.vcd");
-    $dumpvars(op, funct3, funct7, flags, RegWrite, ALUSrc, MemWrite, PCSrc, ImmSrc, ResultSrc,
-              ALUControl);
+    $dumpvars(control_tb);
 
     #1;
     // Test R-Type
