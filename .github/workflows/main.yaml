@@ -60,14 +60,25 @@ jobs:
       run: | 
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
-        sootty "sim.vcd" --l 100 -o > waveforms/${{ matrix.component }}.svg
 
-    - name: Upload waveform as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.component}} waveform
-        path: ./waveforms
+  waveforms:
+    runs-on: ubuntu-latest
+    needs: riscy32_single
+    steps:
+      - name: Generate waveforms
+        run: |
+          "ITEMS=alu control"
+          for item in $ITEMS; do
+            verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/$(item)_tb.sv cores/riscy32_single/src/$(item).sv;
+            ./obj_dir/V$(item)_tb
+            sootty "sim.vcd" --l 100 -o > waveforms/$(item).svg
+          done
 
+      - name: Upload waveform as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: waveforms
+          path: ./waveforms
   #  conway:
   #    runs-on: ubuntu-latest
   #    needs: build_verilator
