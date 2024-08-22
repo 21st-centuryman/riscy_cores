@@ -67,11 +67,11 @@ jobs:
     steps:
       - name: Generate waveforms
         run: |
-          ITEMS=alu control
+          ITEMS="alu control"
           for item in $ITEMS; do
-            verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/$(item)_tb.sv cores/riscy32_single/src/$(item).sv;
-            ./obj_dir/V$(item)_tb
-            sootty "sim.vcd" --l 100 -o > waveforms/$(item).svg
+            verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+            ./obj_dir/V${item}_tb
+            sootty "sim.vcd" --l 100 -o > waveforms/${item}.svg
           done
 
       - name: Upload waveform as artifact
