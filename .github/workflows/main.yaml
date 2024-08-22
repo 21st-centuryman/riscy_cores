@@ -55,32 +55,104 @@ jobs:
         verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
         ./obj_dir/V${{ matrix.component }}_tb
 
-  conway:
-    runs-on: ubuntu-latest
-    needs: build_verilator
+  # conway:
+  #   runs-on: ubuntu-latest
+  #   needs: build_verilator
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
 
-    - name: Perpare for verilator
-      run: | 
-        sudo mkdir -p /usr/local/share/verilator/
-        sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
+  #   - name: Perpare for verilator
+  #     run: | 
+  #       sudo mkdir -p /usr/local/share/verilator/
+  #       sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
 
-    - name: Restore Verilator Binary
-      uses: actions/cache@v4
-      with:
-        path: /usr/local/share/verilator/
-        key: verilator-binary
+  #   - name: Restore Verilator Binary
+  #     uses: actions/cache@v4
+  #     with:
+  #       path: /usr/local/share/verilator/
+  #       key: verilator-binary
 
-    - name: Set up verilator
-      run: | 
-        sudo apt-get install ccache
-        chmod -R +x /usr/local/share/verilator/*
-        sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
+  #   - name: Set up verilator
+  #     run: | 
+  #       sudo apt-get install ccache
+  #       chmod -R +x /usr/local/share/verilator/*
+  #       sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
 
-    - name: Run the testbench
-      run: | 
-        verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
-        ./obj_dir/Vconway_tb
+  #   - name: Run the testbench
+  #     run: | 
+  #       verilator --timescale 10ns/1ns --clk --assert -Wall --trace --binary cores/conway/tests/conway_tb.sv cores/conway/src/conway.sv;
+  #       ./obj_dir/Vconway_tb
+
+
+  # Need to make build step work first so we can seperate it all.
+  synthesize_build:
+    #needs: [conway, riscy32_single] # idk if i wanna synthesize conways game of life hahaha
+   needs: riscy32_single
+   runs-on: ubuntu-latest
+
+   steps:
+   - name: Install dependencies
+     shell: bash
+     run: |
+       sudo apt-get install -y build-essential python3 python3-venv make git tcllib magic python3-pip xz-utils yosys
+
+   - name: Checkout and build OpenLane
+     shell: bash
+     run: |
+       git clone https://github.com/The-OpenROAD-Project/OpenLane
+       cd OpenLane
+       make -j `nproc`
+
+   - name: Checkout and build OpenRoad
+     shell: bash
+     run: |
+       git clone --recursive https://github.com/The-OpenROAD-Project/OpenROAD.git;
+       cd OpenROAD;
+       sudo ./etc/DependencyInstaller.sh;
+       mkdir build && cd build
+       cmake ..;
+       make -j `nproc`;
+       sudo make install;
+
+   - name: Install Volare and SkyWater SKY130 PDK files 
+     working-directory: OpenLane
+     shell: bash
+     run: |
+       mkdir pdks;
+       python3 -m pip install --upgrade --no-cache-dir volare;
+       export PDK_ROOT=/home/runner/work/riscy_cores/riscy_cores/OpenLane/pdks;
+       volare enable --pdk sky130
+
+   - uses: haskell-actions/setup@v2
+   - name: install sv2v
+     shell: bash
+     run: stack install sv2v
+
+      # From here we need to either package these binaries for our next process or we just build from here
+      # This is a long fucking build tho
+
+
+      #   - name: Post build creation of directory and copying files.
+      #     working-directory: OpenLane
+      #     shell: bash
+      #     run: |
+      #       ./flow.tcl -design conway -init_design_config -add_to_designs
+      #       yosys -p "read_verilog -sv ../cores/conway/src/conway.sv; write_verilog designs/conway/conway.v" # Convert file to verilog
+      #       cp designs/conway/conway.v designs/conway/
+      #
+      #
+      #   - name: Synthesize and generate PNG
+      #     working-directory: OpenLane
+      #     run: |
+      #       ./flow.tcl -overwrite -design conway -run_path runs -tag run$(date +"%m%d") 
+      #       ./tt/tt_tool.py --run-dir runs/run$(date +"%m%d") --create-png
+      #
+      #   - name: Upload images
+      #     uses: edunad/actions-image@v2.0.0
+      #     with:
+      #       path: '/home/runner/work/riscy_cores/riscy_cores/OpenLane/gds_render.png'
+      #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #       title: 'Chip render'
+
