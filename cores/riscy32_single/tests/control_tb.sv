@@ -25,7 +25,7 @@ module control_tb;
 
   initial begin
     $dumpfile("sim.vcd");
-    $dumpvars(control_tb);
+    $dumpvars(0, control_tb);
 
     #1;
     // Test R-Type
