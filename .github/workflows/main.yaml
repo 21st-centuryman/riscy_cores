@@ -88,7 +88,7 @@ jobs:
 
   # Need to make build step work first so we can seperate it all.
   synthesize_build:
-    #needs: [conway, riscy32_single]
+    #needs: [conway, riscy32_single] # idk if i wanna synthesize conways game of life hahaha
    needs: riscy32_single
    runs-on: ubuntu-latest
 
@@ -119,11 +119,27 @@ jobs:
    - name: Install Volare and SkyWater SKY130 PDK files 
      working-directory: OpenLane
      shell: bash
-     run: 
+     run: |
        mkdir pdks;
        python3 -m pip install --upgrade --no-cache-dir volare;
        export PDK_ROOT=/home/runner/work/riscy_cores/riscy_cores/OpenLane/pdks;
        volare enable --pdk sky130
+
+
+  synthesize:
+    #needs: synthesize_build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+      - name: install sv2v
+        shell: bash
+        run: | 
+          git clone https://github.com/zachjs/sv2v.git
+          cd sv2v
+          make
+          sv2v --version
 
       #   - name: Post build creation of directory and copying files.
       #     working-directory: OpenLane
