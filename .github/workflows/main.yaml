@@ -83,7 +83,7 @@ jobs:
         run: |
           sudo apt-get install -y python3
           python3 -m pip install sootty
-          mkdir waveforms
+          mkdir -p waveforms/svg waveforms/vcd
 
       - name: Generate waveforms
         run: |
@@ -91,7 +91,8 @@ jobs:
           for item in $ITEMS; do
             verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
             ./obj_dir/V${item}_tb
-            sootty "sim.vcd" -o > waveforms/${item}.svg
+            sootty "${a}.vcd" -o > waveforms/svg/${item}.svg
+            mv ${a}.vcd ./waveforms/vcd/
           done
 
       - name: Upload waveforms as artifact

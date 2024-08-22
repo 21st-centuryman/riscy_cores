@@ -24,7 +24,6 @@ module control_tb;
   );
 
   initial begin
-    $dumpfile("sim.vcd");
     $dumpvars(op, funct3, funct7, flags, RegWrite, ALUSrc, MemWrite, PCSrc, ImmSrc, ResultSrc,
               ALUControl);
 

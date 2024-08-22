@@ -17,7 +17,7 @@ module alu_tb ();
   logic [31:0] max = 4294967295;  // 2 ^ 31 -1
 
   initial begin
-    $dumpfile("sim.vcd");
+    $dumpfile("alu.vcd");
     $dumpvars(0, a, b, out, ALUControl, flags);
 
     ALUControl = 4'b0000;  // ADD
