@@ -14,124 +14,134 @@ module alu_tb ();
       .ALUControl(ALUControl)
   );
 
+  logic [31:0] max = 4294967295;  // 2 ^ 31 -1
+
   initial begin
     $dumpfile("sim.vcd");
-    $dumpvars(0, alu_tb);
+    $dumpvars(0, a, b, out, ALUControl, flags);
 
     ALUControl = 4'b0000;  // ADD
     a = 20;
     b = 30;
-    assert (out == (a + b))
+    #1;
+    assert (out == (a + b))  // 20 + 30 = 50
     else $error("ADD: is broken");
 
-    #1;
     ALUControl = 4'b1000;  // SUB
     a = 8;
     b = 3;
-    assert (out == (a - b))
+    #1;
+    assert (out == (a - b))  // 8-3 = 5
     else $error("SUB: is broken");
 
-    #1;
     ALUControl = 4'b0001;  // SLL
-    a = 8;
-    b = 3;
+    a = 27;
+    b = 4;
+    #1;
     assert (out == (a << b))
     else $error("SLL: is broken");
 
-    #1;
     ALUControl = 4'b0010;  // SLT
     a = 8;
     b = 3;
+    #1;
     assert (out == {31'b0, a < b})
     else $error("SLT: is broken");
 
-    #1;
-    ALUControl = 4'b0010;  // SLTU
+    ALUControl = 4'b0011;  // SLTU
     a = 8;
     b = 3;
+    #1;
     assert (out == {31'b0, $unsigned(a) < $unsigned(b)})
     else $error("SLTU: is broken");
 
-    #1;
     ALUControl = 4'b0100;  // XOR
-    a = 8;
-    b = 3;
-    assert (out == (a ^ b))
+    a = 10;
+    b = 5;
+    #1;
+    assert (out == (a ^ b))  // 10 ^ 5 = 15
     else $error("XOR: is broken");
 
-    #1;
     ALUControl = 4'b0101;  // SRL
     a = 8;
     b = 3;
+    #1;
     assert (out == (a >> b))
     else $error("SRL: is broken");
 
-    #1;
     ALUControl = 4'b1101;  // SRA
     a = 8;
     b = 3;
+    #1;
     assert (out == (a >> b))
     else $error("SRA: is broken");
 
-    #1;
     ALUControl = 4'b0110;  // OR
     a = 20;
     b = 30;
+    #1;
     assert (out == (a | b))
     else $error("OR: is broken");
 
-    #1;
     ALUControl = 4'b0111;  // AND
     a = 20;
     b = 30;
+    #1;
     assert (out == (a & b))
     else $error("AND: is broken");
 
-
     // -----------------------------
-    // FLAGS (ONLY ZERO FOR NOW)
+    // FLAGS
     // -----------------------------
-    #10;
     ALUControl = 4'b0000;  // ADD
-    a = 2 ^ 31;
+    a = max;
     b = 1;
+    #1;
     assert (flags[0])
-    else $error("Overflow flag is broken");
+    else $error("Overflow pos flag is broken");
 
-    #10;
+    ALUControl = 4'b1000;  // SUB
+    a = -(max);
+    b = max;
+    #1;
+    assert (flags[0])
+    else $error("Overflow neg flag is broken");
+
     ALUControl = 4'b0000;  // ADD
-    a = 2 ^ 31;
+    a = max;
     b = 1;
+    #2;
     assert (flags[1])
     else $error("Carry flag is broken");
 
-    #10;
     ALUControl = 4'b1000;  // SUB
     a = 20;
     b = 20;
+    #2;
     assert (flags[2])
     else $error("Zero flag is broken");
 
-    #10;
     ALUControl = 4'b1000;  // SUB
     a = 20;
     b = 30;
+    #2;
     assert (!flags[2])
     else $error("Zero flag is broken");
 
-    #10;
     ALUControl = 4'b1000;  // SUB
     a = -2;
     b = 30;
+    #2;
     assert (flags[3])
     else $error("Sign flag is broken");
 
-    #10;
     ALUControl = 4'b0000;  // SUB
-    a = 20;
-    b = -30;
+    a = -20;
+    b = 30;
+    #2;
     assert (!flags[3])
     else $error("Sign flag is broken");
+    #2;
     $finish;
   end
 endmodule
