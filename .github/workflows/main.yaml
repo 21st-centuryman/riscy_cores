@@ -125,21 +125,14 @@ jobs:
        export PDK_ROOT=/home/runner/work/riscy_cores/riscy_cores/OpenLane/pdks;
        volare enable --pdk sky130
 
+   - uses: haskell-actions/setup@v2
+   - name: install sv2v
+     shell: bash
+     run: stack install sv2v
 
-  synthesize:
-    #needs: synthesize_build
-    runs-on: ubuntu-latest
+      # From here we need to either package these binaries for our next process or we just build from here
+      # This is a long fucking build tho
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: haskell-actions/setup@v2
-      - name: install sv2v
-        shell: bash
-        run: | 
-          git clone https://github.com/zachjs/sv2v.git
-          cd sv2v
-          make
-          sv2v --version
 
       #   - name: Post build creation of directory and copying files.
       #     working-directory: OpenLane
