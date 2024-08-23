@@ -89,8 +89,10 @@ jobs:
       run: |
         mkdir -p waveforms/svg
         for file in ./waveforms/vcd/*; do
+          echo ${file}
           sootty "${file}" -o > waveforms/svg/"${file##*/}".svg
         done
+      continue-on-error: true
 
     - name: Upload waveforms as artifact
       uses: actions/upload-artifact@v4
