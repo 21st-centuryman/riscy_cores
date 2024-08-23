@@ -25,8 +25,7 @@ module control_tb;
 
   initial begin
     $dumpfile("control.vcd");
-    $dumpvars(op, funct3, funct7, flags, RegWrite, ALUSrc, MemWrite, PCSrc, ImmSrc, ResultSrc,
-              ALUControl);
+    $dumpvars(op, control_tb);
 
     // Test R-Type
     op = 7'b0110011;

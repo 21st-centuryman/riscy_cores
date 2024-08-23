@@ -22,12 +22,9 @@ jobs:
         path: /usr/local/share/verilator/
         key: verilator-binary
 
-  riscy32_single:
+  riscy32_single_components:
     runs-on: ubuntu-latest
     needs: build_verilator
-    strategy:
-      matrix: 
-        component: ["alu", "control", "register", "memory"]
 
     steps:
     - name: Checkout code
@@ -49,57 +46,64 @@ jobs:
         sudo apt-get install ccache
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
+        mkdir -p waveforms/vcd
 
-    - name: Run the testbench
-      run: | 
-        verilator --timescale 10ns/1ns --clk --assert -Wall --binary cores/riscy32_single/tests/${{ matrix.component }}_tb.sv cores/riscy32_single/src/${{ matrix.component }}.sv;
-        ./obj_dir/V${{ matrix.component }}_tb
+    # We need to rethink these testbenches. I would prefer matrix
+    - name: Run the testbenches without clock
+      run: |
+        ITEMS="alu control" 
+        for item in $ITEMS; do
+          verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+          ./obj_dir/V${item}_tb
+          mv ${item}.vcd ./waveforms/vcd/
+        done
+
+    - name: Run the testbenches with clock
+      run: |
+        ITEMS="register memory" 
+        for item in $ITEMS; do
+          verilator --clk clk --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+          ./obj_dir/V${item}_tb
+          mv ${item}.vcd ./waveforms/vcd/
+        done
+
+    - name: Cache vcd
+      uses: actions/cache@v4
+      with:
+        path: ./waveforms
+        key: waveforms
 
   waveforms:
     runs-on: ubuntu-latest
-    needs: riscy32_single
+    needs: riscy32_single_components
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Restore vcds
+      uses: actions/cache@v4
+      with:
+        path: ./waveforms
+        key: waveforms
 
-      - name: Perpare for verilator
-        run: | 
-          sudo mkdir -p /usr/local/share/verilator/
-          sudo chown -R $(whoami):$(whoami) /usr/local/share/verilator/
+    - name: Setup sootty
+      run: |
+        sudo apt-get install -y python3
+        python3 -m pip install sootty
+        mkdir -p waveforms/svg waveforms/vcd
+        
+    - name: generate Waveforms
+      run: |
+        mkdir -p waveforms/svg
+        for file in ./waveforms/vcd/*; do
+          echo ${file}
+          filename=${file##*/}
+          sootty "${file}" -l 300 -o > waveforms/svg/"${filename%.*}".svg
+        done
+      continue-on-error: true
 
-      - name: Restore Verilator Binary
-        uses: actions/cache@v4
-        with:
-          path: /usr/local/share/verilator/
-          key: verilator-binary
-
-      - name: Set up verilator
-        run: | 
-          sudo apt-get install ccache
-          chmod -R +x /usr/local/share/verilator/*
-          sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
-
-      - name: Setup sootty
-        run: |
-          sudo apt-get install -y python3
-          python3 -m pip install sootty
-          mkdir -p waveforms/svg waveforms/vcd
-
-      - name: Generate waveforms
-        run: |
-          ITEMS="alu control" # Add register and memory when you know why they won't work with sootty
-          for item in $ITEMS; do
-            verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
-            ./obj_dir/V${item}_tb
-            sootty "${item}.vcd" -o > waveforms/svg/${item}.svg
-            mv ${item}.vcd ./waveforms/vcd/
-          done
-
-      - name: Upload waveforms as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: waveforms
-          path: ./waveforms
+    - name: Upload waveforms as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: waveforms
+        path: ./waveforms
 
   conway:
     runs-on: ubuntu-latest
