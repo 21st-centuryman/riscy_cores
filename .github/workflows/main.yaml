@@ -87,13 +87,21 @@ jobs:
 
       - name: Generate waveforms
         run: |
-          ITEMS="alu control" # Add register and memory when you know why they won't work with sootty
+          ITEMS="alu control" # without clock
           for item in $ITEMS; do
             verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
             ./obj_dir/V${item}_tb
             sootty "${item}.vcd" -o > waveforms/svg/${item}.svg
             mv ${item}.vcd ./waveforms/vcd/
           done
+          ITEMS="register memory" # With clock
+          for item in $ITEMS; do
+            verilator --clk clk --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+            ./obj_dir/V${item}_tb
+            sootty "${item}.vcd" -o > waveforms/svg/${item}.svg
+            mv ${item}.vcd ./waveforms/vcd/
+          done
+
 
       - name: Upload waveforms as artifact
         uses: actions/upload-artifact@v4

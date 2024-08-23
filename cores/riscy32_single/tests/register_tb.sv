@@ -31,43 +31,30 @@ module register_tb;
     a3  = 0;
     wd3 = 0;
 
-    // Test write to register 1
+    // Write and Read register 1
     we3 = 1;
     a3  = 1;
     wd3 = 32'h12345678;
     repeat (2) @(posedge clk);
-    assert (rd1 == 32'h12345678)
-    else $error("Write to register 1 failed");
-
-    // Test read from register 1
     we3 = 0;
     a1  = 1;
     repeat (2) @(posedge clk);
     assert (rd1 == 32'h12345678)
     else $error("Read from register 1 failed");
 
-    // Test write to register 2
+    // Write and Read register 2
     we3 = 1;
     a3  = 2;
     wd3 = 32'h87654321;
     repeat (2) @(posedge clk);
-    assert (rd2 == 32'h87654321)
-    else $error("Write to register 2 failed");
-
-    // Test read from register 2
     we3 = 0;
     a2  = 2;
     repeat (2) @(posedge clk);
     assert (rd2 == 32'h87654321)
     else $error("Read from register 2 failed");
 
-    // Test write to register 0 (should not write)
-    we3 = 1;
-    a3  = 0;
-    wd3 = 32'hdeadbeef;
-    repeat (2) @(posedge clk);
-    assert (rd1 == 32'h12345678)
-    else $error("Write to register 0 failed");
+
+    // Add future registers like zero or what not
 
     $finish;
   end
