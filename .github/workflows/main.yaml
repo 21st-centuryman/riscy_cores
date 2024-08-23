@@ -95,7 +95,7 @@ jobs:
         for file in ./waveforms/vcd/*; do
           echo ${file}
           filename=${file##*/}
-          sootty "${file}" l 300 -o > waveforms/svg/"${filename%.*}".svg
+          sootty "${file}" -l 300 -o > waveforms/svg/"${filename%.*}".svg
         done
       continue-on-error: true
 
