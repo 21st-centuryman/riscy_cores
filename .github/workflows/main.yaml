@@ -54,7 +54,7 @@ jobs:
         mkdir -p waveforms/svg waveforms/vcd
 
     - name: Run the testbenches
-      run: | # We need to rethink this, it is not working as I want it to.
+      run: | # We need to rethink this, I want to use a matrix
         ITEMS="alu control" # without clock
         for item in $ITEMS; do
           verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
