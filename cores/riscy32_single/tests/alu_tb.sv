@@ -18,7 +18,7 @@ module alu_tb ();
 
   initial begin
     $dumpfile("alu.vcd");
-    $dumpvars(0, a, b, out, ALUControl, flags);
+    $dumpvars(0, alu_tb);
 
     ALUControl = 4'b0000;  // ADD
     a = 20;

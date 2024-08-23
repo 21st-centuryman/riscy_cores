@@ -56,6 +56,7 @@ module register_tb;
 
     // Add future registers like zero or what not
 
+    $dumpoff;
     $finish;
   end
 endmodule
