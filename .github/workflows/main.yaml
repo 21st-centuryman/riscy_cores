@@ -70,6 +70,21 @@ jobs:
           mv ${item}.vcd ./waveforms/vcd/
         done
 
+    - name: Cache Waveforms 
+      uses: actions/cache@v4
+      with:
+        path: ./waveforms
+        key: waveforms
+
+  waveforms:
+    runs-on: ubuntu-latest
+    needs: riscy32_single_components
+    steps:
+    - name: Restore waveforms
+      uses: actions/cache@v4
+      with:
+        path: ./waveforms
+        key: waveforms
 
     - name: Upload waveforms as artifact
       uses: actions/upload-artifact@v4
