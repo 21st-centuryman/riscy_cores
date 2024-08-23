@@ -46,12 +46,7 @@ jobs:
         sudo apt-get install ccache
         chmod -R +x /usr/local/share/verilator/*
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
-
-    - name: Setup sootty
-      run: |
-        sudo apt-get install -y python3
-        python3 -m pip install sootty
-        mkdir -p waveforms/svg waveforms/vcd
+        mkdir -p waveforms/vcd
 
     - name: Run the testbenches
       run: | # We need to rethink this, I want to use a matrix
@@ -59,14 +54,12 @@ jobs:
         for item in $ITEMS; do
           verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
           ./obj_dir/V${item}_tb
-          sootty "${item}.vcd" -o > waveforms/svg/${item}.svg
           mv ${item}.vcd ./waveforms/vcd/
         done
         ITEMS="register memory" # With clock
         for item in $ITEMS; do
           verilator --clk clk --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
           ./obj_dir/V${item}_tb
-          sootty "${item}.vcd" -o > waveforms/svg/${item}.svg
           mv ${item}.vcd ./waveforms/vcd/
         done
 
@@ -85,6 +78,19 @@ jobs:
       with:
         path: ./waveforms
         key: waveforms
+
+    - name: Setup sootty
+      run: |
+        sudo apt-get install -y python3
+        python3 -m pip install sootty
+        mkdir -p waveforms/svg waveforms/vcd
+        
+    - name: generate Waveforms
+      run: |
+        mkdir -p waveforms/svg
+        for file in ./waveforms/vcd/*; do
+          sootty "${file}" -o > waveforms/svg/"${file##*/}".svg
+        done
 
     - name: Upload waveforms as artifact
       uses: actions/upload-artifact@v4
