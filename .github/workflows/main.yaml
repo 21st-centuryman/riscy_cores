@@ -48,15 +48,19 @@ jobs:
         sudo ln -s /usr/local/share/verilator/bin/verilator /usr/local/bin/verilator
         mkdir -p waveforms/vcd
 
-    - name: Run the testbenches
-      run: | # We need to rethink this, I want to use a matrix
-        ITEMS="alu control" # without clock
+    # We need to rethink these testbenches. I would prefer matrix
+    - name: Run the testbenches without clock
+      run: |
+        ITEMS="alu control" 
         for item in $ITEMS; do
           verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
           ./obj_dir/V${item}_tb
           mv ${item}.vcd ./waveforms/vcd/
         done
-        ITEMS="register memory" # With clock
+
+    - name: Run the testbenches with clock
+      run: |
+        ITEMS="register memory" 
         for item in $ITEMS; do
           verilator --clk clk --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
           ./obj_dir/V${item}_tb
@@ -90,7 +94,8 @@ jobs:
         mkdir -p waveforms/svg
         for file in ./waveforms/vcd/*; do
           echo ${file}
-          sootty "${file}" -o > waveforms/svg/"${file##*/}".svg
+          filename = ${file##*/}
+          sootty "${file}" l 300 -o > waveforms/svg/"${filename%.*}".svg
         done
       continue-on-error: true
 
