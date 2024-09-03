@@ -49,20 +49,15 @@ jobs:
         mkdir -p waveforms/vcd
 
     # We need to rethink these testbenches. I would prefer matrix
-    - name: Run the testbenches without clock
+    - name: Run the testbenches
       run: |
-        ITEMS="alu control" 
+        ITEMS="alu control register memory" 
         for item in $ITEMS; do
-          verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
-          ./obj_dir/V${item}_tb
-          mv ${item}.vcd ./waveforms/vcd/
-        done
-
-    - name: Run the testbenches with clock
-      run: |
-        ITEMS="register memory" 
-        for item in $ITEMS; do
-          verilator --clk clk --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+          if item == "alu" || item == "control"; then
+            verilator --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+          else 
+             verilator --clk clk --timescale 10ns/1ns --assert --trace --binary cores/riscy32_single/tests/${item}_tb.sv cores/riscy32_single/src/${item}.sv
+          fi
           ./obj_dir/V${item}_tb
           mv ${item}.vcd ./waveforms/vcd/
         done
@@ -95,7 +90,13 @@ jobs:
         for file in ./waveforms/vcd/*; do
           echo ${file}
           filename=${file##*/}
-          sootty "${file}" -l 300 -o > waveforms/svg/"${filename%.*}".svg
+          sootty "${file}" -s 0 -e 99 -o > waveforms/svg/"${filename%.*}".svg
+          if filename%.* != "control"; then
+            for i in {1..5}; do
+              if i == 3 && filename%.* == "alu"; then break; fi
+              sootty "${file}" -s ($i * 100 ) -e (($i + 1)* 100 -1) -o > waveforms/svg/"${filename%.*}_${i}".svg
+            done
+          fi
         done
       continue-on-error: true
 
